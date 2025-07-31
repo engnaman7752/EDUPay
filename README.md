@@ -1,6 +1,14 @@
 EduPay: School Fees & Announcement Management App
-📚 Overview
-EduPay is a comprehensive mobile application designed to streamline student fee management, announcements, and online payments for schools. It features a multi-tenant architecture, allowing multiple administrators to manage their own students and data securely.
+A comprehensive mobile application designed to streamline student fee management, announcements, and online payments for schools.
+
+🌟 About
+EduPay is a full-stack project built with Flutter and Spring Boot, designed to showcase a multi-tenant application with role-based access control. The app allows school administrators to manage student data and finances, while students can track their fees and make online payments.
+
+Author: Naman Jain
+
+GitHub: engnaman7752
+
+Email: namanjain1237752@gmail.com
 
 ✨ Features
 Multi-Admin Support: Each admin manages their own set of students and data.
@@ -17,13 +25,9 @@ Online Payments: Students can view their fee status and pay online (Razorpay int
 
 Payment History & Receipts: Students can view their payment history and auto-generated receipts for both online and cash payments.
 
-Cloud Deployment Ready: Designed for deployment on platforms like Railway.app or Render.com with PostgreSQL.
-
 🚀 Technologies Used
 Frontend (Flutter)
 Framework: Flutter (Dart)
-
-State Management: (Can be added later, e.g., Provider, Riverpod)
 
 HTTP Client: http package
 
@@ -47,6 +51,8 @@ Build Tool: Maven
 Utilities: Lombok, JJWT
 
 🏗️ Project Structure
+The project follows a modular, layered architecture for both the frontend and backend.
+
 Backend (com.edupay/)
 com.edupay/
 ├── controller/       # REST APIs
@@ -69,33 +75,30 @@ edupay_app/lib/
 
 🛠️ Setup and Installation
 1. Backend Setup
-Clone the repository: (Assuming you have your backend code in a directory, e.g., EduPay/)
+Clone the repository:
+
+git clone https://github.com/engnaman7752/EduPay.git
+cd EduPay
 
 Database Setup (PostgreSQL):
 
-Ensure PostgreSQL is installed and running on your local machine.
+Ensure PostgreSQL is installed and running.
 
-Create a new database, e.g., edupay_db.
+Create a database named edupay_db.
 
-Update src/main/resources/application.properties with your database credentials:
+Update src/main/resources/application.properties with your credentials:
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/edupay_db
 spring.datasource.username=postgres
 spring.datasource.password=7752
 
-JWT Secret Key: In application.properties, replace the placeholder for jwt.secret with a strong, random key.
-
-jwt.secret=yourSuperSecretKeyThatIsAtLeast256BitsLongAndRandomlyGeneratedForEduPayApp
+JWT Secret Key: In application.properties, set jwt.secret to a strong, random key.
 
 Build and Run Backend:
 
-Navigate to the backend project root (EduPay/).
+Run mvn clean install to build.
 
-Run mvn clean install to build the project and download dependencies.
-
-Run the Spring Boot application: mvn spring-boot:run or run from your IDE.
-
-The backend will start on http://localhost:8080.
+Run the Spring Boot application: mvn spring-boot:run or from your IDE.
 
 2. Frontend Setup
 Navigate to Flutter project:
@@ -110,29 +113,16 @@ Configure API Base URL:
 
 Open lib/constants/api_constants.dart.
 
-Set the BASE_URL to your backend's address.
+The project uses conditional logic to determine the BASE_URL based on the platform. However, for physical Android devices, you must manually set your host machine's IP address.
 
-For Android Emulator: static const String BASE_URL = 'http://10.0.2.2:8080/api';
+Example for physical device: return 'http://192.168.1.5:8080/api';
 
-For iOS Simulator/Localhost: static const String BASE_URL = 'http://localhost:8080/api';
-
-For physical device (if backend is on your machine): static const String BASE_URL = 'http://YOUR_MACHINE_IP:8080/api';
-
-For deployed backend: static const String BASE_URL = 'https://your-backend-domain.com/api';
-
-🚀 How to Run the App
-Ensure your Spring Boot backend is running.
-
-Open your Flutter project in your IDE (VS Code or Android Studio).
-
-Select a device (emulator or physical device).
-
-Run the app:
+Run the App:
 
 flutter run
 
 🧪 Testing with Postman
-To test the backend API endpoints, refer to the detailed Postman Testing Guide provided previously. The general flow is:
+A Postman collection is recommended for testing all API endpoints. The general flow is:
 
 Register Admin: POST /api/auth/register/admin
 
@@ -142,10 +132,9 @@ Add Student (as Admin): POST /api/admin/students (use admin JWT)
 
 Login Student: POST /api/auth/login (use student name/mobile, get JWT token)
 
-Access Student Data (as Student): GET /api/student/fees, GET /api/student/payments/history (use student JWT)
+Access Student Data (as Student): GET /api/student/fees (use student JWT)
 
 Record Cash Payment (as Admin): POST /api/admin/fees/cash-deposit (use admin JWT)
 
-
-
-Feel free to explore and enhance the application!
+🤝 Contribution
+Contributions are welcome! If you find a bug or have a suggestion, please open an issue or submit a pull request.
