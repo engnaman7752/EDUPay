@@ -8,7 +8,7 @@ Author: Naman Jain
 
 GitHub: engnaman7752
 
-Email: namanjain1237752@gmail.com
+Email: 2023kuec2073@iiitkota.ac.in
 
 ✨ Features
 Multi-Admin Support: Each admin manages their own set of students and data.
