@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class User {
   final int? id;
-  final String p;
+  final String username;
   final String password; // Note: This will be hashed on the backend
   final String role;
 
