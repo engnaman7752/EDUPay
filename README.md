@@ -4,6 +4,8 @@
 
 EduPay is a comprehensive mobile application designed to streamline student fee management, announcements, and online payments for schools. It features a multi-role architecture with secure authentication, allowing administrators to manage students and payments while students can view their fees and payment history.
 
+Built with Flutter and Spring Boot as a full-stack project showcasing multi-tenant application architecture with role-based access control.
+
 ## ✨ Features
 
 - **Multi-Admin Support**: Administrators can manage their own students and fee records
@@ -32,6 +34,7 @@ EduPay is a comprehensive mobile application designed to streamline student fee 
 - **Build Tool**: Maven
 - **Utilities**: Lombok for boilerplate reduction
 
+<<<<<<< HEAD
 ## 📁 Project Structure
 
 ```
@@ -146,22 +149,48 @@ EDUPay-1/
    flutter run
    ```
 
+<<<<<<< HEAD
 ## 🚀 Running the Application
+=======
+🏗️ Project Structure
+The project follows a modular, layered architecture for both the frontend and backend.
+
+Backend (com.edupay/)
+com.edupay/
+├── controller/       # REST APIs
+├── service/          # Business logic
+├── repository/       # JPA DB access
+├── entity/           # DB tables (User, Student, Fee, etc.)
+├── dto/              # Login & response formats
+├── config/           # Security (JWT, CORS)
+├── util/             # Helpers (JWT, date)
+└── exception/        # Error handling
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 1. **Start Backend**: 
    - Ensure PostgreSQL is running
    - Navigate to backend folder and run `mvn spring-boot:run`
    - Verify it's running on `http://localhost:8080`
 
+<<<<<<< HEAD
 2. **Start Frontend**:
    - Open Flutter project
    - Connect a device or start an emulator
    - Run `flutter run`
+=======
+🛠️ Setup and Installation
+1. Backend Setup
+Clone the repository:
+
+git clone https://github.com/engnaman7752/EduPay.git
+cd EduPay
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 3. **Login Credentials**:
    - **Admin**: Credentials set during admin registration
    - **Student**: Credentials assigned by admin
 
+<<<<<<< HEAD
 ## 🔐 Authentication Flow
 
 - Users login with email and password
@@ -170,11 +199,19 @@ EDUPay-1/
 - Separate access paths for Admin and Student roles
 
 ## 📱 Key API Endpoints
+=======
+Ensure PostgreSQL is installed and running.
+
+Create a database named edupay_db.
+
+Update src/main/resources/application.properties with your credentials:
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Authentication
 - `POST /api/auth/register/admin` - Register new admin
 - `POST /api/auth/login` - Login (returns JWT token)
 
+<<<<<<< HEAD
 ### Student Management (Admin)
 - `GET /api/students` - List all students
 - `POST /api/students` - Add new student
@@ -185,11 +222,15 @@ EDUPay-1/
 - `GET /api/fees/{studentId}` - Get student fees
 - `PUT /api/fees/{id}/status` - Update fee status
 - `POST /api/fees/{id}/payment` - Record payment
+=======
+JWT Secret Key: In application.properties, set jwt.secret to a strong, random key.
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Announcements
 - `GET /api/announcements` - List announcements
 - `POST /api/announcements` - Create announcement (Admin)
 
+<<<<<<< HEAD
 ## 📦 Dependencies
 
 ### Backend
@@ -205,6 +246,11 @@ EDUPay-1/
 - cupertino_icons (icons)
 
 ## 🌐 Deployment
+=======
+Run mvn clean install to build.
+
+Run the Spring Boot application: mvn spring-boot:run or from your IDE.
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Backend Deployment (Railway.app / Render.com)
 - Push code to GitHub
@@ -231,6 +277,7 @@ EDUPay-1/
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+<<<<<<< HEAD
 ## 👨‍💻 Author
 
 **Naman Jain**
@@ -249,15 +296,30 @@ For issues and questions, please:
 ---
 
 **Note**: This is a development version. For production use, ensure all security measures are properly configured, including strong JWT secrets, CORS policies, and database encryption.
+=======
+The project uses conditional logic to determine the BASE_URL based on the platform. However, for physical Android devices, you must manually set your host machine's IP address.
+
+Example for physical device: return 'http://192.168.1.5:8080/api';
+
+Run the App:
+
+flutter run
+
+🧪 Testing with Postman
+A Postman collection is recommended for testing all API endpoints. The general flow is:
+
+Register Admin: POST /api/auth/register/admin
+
+Login Admin: POST /api/auth/login (get JWT token)
+>>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 Add Student (as Admin): POST /api/admin/students (use admin JWT)
 
 Login Student: POST /api/auth/login (use student name/mobile, get JWT token)
 
-Access Student Data (as Student): GET /api/student/fees, GET /api/student/payments/history (use student JWT)
+Access Student Data (as Student): GET /api/student/fees (use student JWT)
 
 Record Cash Payment (as Admin): POST /api/admin/fees/cash-deposit (use admin JWT)
 
-
-
-Feel free to explore and enhance the application!
+🤝 Contribution
+Contributions are welcome! If you find a bug or have a suggestion, please open an issue or submit a pull request.
