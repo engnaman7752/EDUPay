@@ -1,10 +1,6 @@
 # EduPay AI — Intelligent School Fee Management System
 
 <p align="center">
-  <img src="docs/images/architecture.png" alt="EduPay AI Architecture" width="800"/>
-</p>
-
-<p align="center">
   <strong>🤖 AI-Powered Chat (RAG) &nbsp;•&nbsp; ⚡ Real-Time WebSocket Notifications &nbsp;•&nbsp; 💳 Smart Fee Management</strong>
 </p>
 
@@ -163,8 +159,7 @@ EDUPay-1/
 │       │   ├── admin/                    # Admin dashboard & management
 │       │   └── auth/                     # JWT-based login
 │       └── main.dart                     # App entry with Riverpod + dark theme
-│
-└── docs/images/architecture.png          # Architecture diagram
+└── README.md                             # Project documentation
 ```
 
 ---
