@@ -19,19 +19,12 @@ spring:
   # ===== Spring AI Configuration =====
   ai:
     openai:
-      api-key: ${GEMINI_API_KEY:your-gemini-api-key-here}
+      api-key: ${GEMINI_API_KEY:AIzaSyDrjk55pgPDh8RFbuW1AO2k-yorBJNfUJw}
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:
           model: gemini-2.0-flash
           temperature: 0.7
-
-    vectorstore:
-      pgvector:
-        index-type: hnsw
-        distance-type: cosine_distance
-        dimensions: 768
-        initialize-schema: true
 
 # ===== JWT Configuration =====
 jwt:

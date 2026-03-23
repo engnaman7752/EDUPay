@@ -26,4 +26,13 @@ public class AIConfig {
                 .defaultSystem(systemPrompt)
                 .build();
     }
+
+    /**
+     * Creates an in-memory SimpleVectorStore using the local Transformers embedding model.
+     * This avoids the need for installing complex pgvector extensions on Windows/pgAdmin.
+     */
+    @Bean
+    public org.springframework.ai.vectorstore.VectorStore vectorStore(org.springframework.ai.embedding.EmbeddingModel embeddingModel) {
+        return org.springframework.ai.vectorstore.SimpleVectorStore.builder(embeddingModel).build();
+    }
 }
