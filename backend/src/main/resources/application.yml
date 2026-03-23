@@ -18,15 +18,13 @@ spring:
 
   # ===== Spring AI Configuration =====
   ai:
-    vertex:
-      ai:
-        gemini:
-          project-id: ${GOOGLE_CLOUD_PROJECT_ID:your-gcp-project-id}
-          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
-          chat:
-            options:
-              model: gemini-2.0-flash
-              temperature: 0.7
+    openai:
+      api-key: ${GEMINI_API_KEY:your-gemini-api-key-here}
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai/
+      chat:
+        options:
+          model: gemini-2.0-flash
+          temperature: 0.7
 
     vectorstore:
       pgvector:
