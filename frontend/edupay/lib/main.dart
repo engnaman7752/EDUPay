@@ -1,12 +1,19 @@
 //Jai Shri Shyam
-// EduPay App - Main Entry Point
+// EduPay App - Main Entry Point (Enhanced with AI & Real-time features)
 // lib/main.dart
 
 import 'package:flutter/material.dart';
-import 'package:edupay_app/screens/auth/login_page.dart'; // Import My LoginPage
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:edupay_app/core/constants/app_theme.dart';
+import 'package:edupay_app/screens/auth/login_page.dart';
 
 void main() {
-  runApp(const EduPayApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const ProviderScope(
+      child: EduPayApp(),
+    ),
+  );
 }
 
 class EduPayApp extends StatelessWidget {
@@ -15,15 +22,10 @@ class EduPayApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EduPay', // My application title
-      theme: ThemeData(
-        primarySwatch: Colors.blue, // My primary app color
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Inter', // Ensure you have the 'Inter' font set up in pubspec.yaml if you use it
-        useMaterial3: true, // Use Material 3 design
-      ),
-      home: const LoginPage(), // Set the initial screen to LoginPage
-      debugShowCheckedModeBanner: false, // Set to false for production
+      title: 'EduPay AI',
+      theme: AppTheme.darkTheme,
+      home: const LoginPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

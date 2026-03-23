@@ -34,7 +34,6 @@ Built with Flutter and Spring Boot as a full-stack project showcasing multi-tena
 - **Build Tool**: Maven
 - **Utilities**: Lombok for boilerplate reduction
 
-<<<<<<< HEAD
 ## 📁 Project Structure
 
 ```
@@ -149,9 +148,7 @@ EDUPay-1/
    flutter run
    ```
 
-<<<<<<< HEAD
 ## 🚀 Running the Application
-=======
 🏗️ Project Structure
 The project follows a modular, layered architecture for both the frontend and backend.
 
@@ -165,32 +162,21 @@ com.edupay/
 ├── config/           # Security (JWT, CORS)
 ├── util/             # Helpers (JWT, date)
 └── exception/        # Error handling
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 1. **Start Backend**: 
    - Ensure PostgreSQL is running
    - Navigate to backend folder and run `mvn spring-boot:run`
    - Verify it's running on `http://localhost:8080`
 
-<<<<<<< HEAD
 2. **Start Frontend**:
    - Open Flutter project
    - Connect a device or start an emulator
    - Run `flutter run`
-=======
-🛠️ Setup and Installation
-1. Backend Setup
-Clone the repository:
-
-git clone https://github.com/engnaman7752/EduPay.git
-cd EduPay
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 3. **Login Credentials**:
    - **Admin**: Credentials set during admin registration
    - **Student**: Credentials assigned by admin
 
-<<<<<<< HEAD
 ## 🔐 Authentication Flow
 
 - Users login with email and password
@@ -199,19 +185,16 @@ cd EduPay
 - Separate access paths for Admin and Student roles
 
 ## 📱 Key API Endpoints
-=======
 Ensure PostgreSQL is installed and running.
 
 Create a database named edupay_db.
 
 Update src/main/resources/application.properties with your credentials:
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Authentication
 - `POST /api/auth/register/admin` - Register new admin
 - `POST /api/auth/login` - Login (returns JWT token)
 
-<<<<<<< HEAD
 ### Student Management (Admin)
 - `GET /api/students` - List all students
 - `POST /api/students` - Add new student
@@ -222,15 +205,11 @@ Update src/main/resources/application.properties with your credentials:
 - `GET /api/fees/{studentId}` - Get student fees
 - `PUT /api/fees/{id}/status` - Update fee status
 - `POST /api/fees/{id}/payment` - Record payment
-=======
-JWT Secret Key: In application.properties, set jwt.secret to a strong, random key.
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Announcements
 - `GET /api/announcements` - List announcements
 - `POST /api/announcements` - Create announcement (Admin)
 
-<<<<<<< HEAD
 ## 📦 Dependencies
 
 ### Backend
@@ -246,11 +225,9 @@ JWT Secret Key: In application.properties, set jwt.secret to a strong, random ke
 - cupertino_icons (icons)
 
 ## 🌐 Deployment
-=======
 Run mvn clean install to build.
 
 Run the Spring Boot application: mvn spring-boot:run or from your IDE.
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 ### Backend Deployment (Railway.app / Render.com)
 - Push code to GitHub
@@ -277,7 +254,6 @@ Run the Spring Boot application: mvn spring-boot:run or from your IDE.
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-<<<<<<< HEAD
 ## 👨‍💻 Author
 
 **Naman Jain**
@@ -296,7 +272,7 @@ For issues and questions, please:
 ---
 
 **Note**: This is a development version. For production use, ensure all security measures are properly configured, including strong JWT secrets, CORS policies, and database encryption.
-=======
+
 The project uses conditional logic to determine the BASE_URL based on the platform. However, for physical Android devices, you must manually set your host machine's IP address.
 
 Example for physical device: return 'http://192.168.1.5:8080/api';
@@ -311,7 +287,6 @@ A Postman collection is recommended for testing all API endpoints. The general f
 Register Admin: POST /api/auth/register/admin
 
 Login Admin: POST /api/auth/login (get JWT token)
->>>>>>> c01e88a2591edf2821f57f3a90f2d2b49669750b
 
 Add Student (as Admin): POST /api/admin/students (use admin JWT)
 

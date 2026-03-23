@@ -1,8 +1,8 @@
 name: edupay_app
-description: A Flutter frontend for EduPay school management app.
-publish_to: 'none' # Remove this line if you want to publish to pub.dev
+description: A Flutter frontend for EduPay school management app with AI assistant.
+publish_to: 'none'
 
-version: 1.0.0+1
+version: 2.0.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -10,18 +10,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  # For making HTTP requests to the backend
-  http: ^1.2.1 
-  
-  # For local storage (e.g., storing JWT token)
-  shared_preferences: ^2.2.3 
-  
-  # For icons
-  cupertino_icons: ^1.0.8 
-  
-  # For date formatting in receipt_view_page.dart
-  intl: ^0.19.0 
+
+  # HTTP & Networking
+  http: ^1.2.1
+  web_socket_channel: ^3.0.3
+  stomp_dart_client: ^3.0.1
+
+  # State Management
+  flutter_riverpod: ^2.5.0
+
+  # AI Chat UI
+  flutter_markdown: ^0.7.0
+  animated_text_kit: ^4.2.0
+
+  # Local Storage
+  shared_preferences: ^2.2.3
+
+  # UI Enhancements
+  google_fonts: ^6.2.0
+  cupertino_icons: ^1.0.8
+
+  # Date Formatting
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -30,10 +40,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Add the Inter font if you plan to use it (download and place in assets/fonts)
-  # fonts:
-  #   - family: Inter
-  #     fonts:
-  #       - asset: assets/fonts/Inter-Regular.ttf
-  #       - asset: assets/fonts/Inter-Bold.ttf
-  #         weight: 700

@@ -12,5 +12,6 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
 
     List<Fee> findByStudentId(Long studentId);
     Optional<Fee> findByStudentIdAndStatus(Long studentId, String status);
+    List<Fee> findByStudent(com.EduPay.model.Student student);
 
 }

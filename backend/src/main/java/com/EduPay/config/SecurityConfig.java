@@ -68,6 +68,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow public access to authentication endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Allow WebSocket handshake
+                        .requestMatchers("/ws/**").permitAll()
+                        // AI chat endpoints — authenticated users (both roles)
+                        .requestMatchers("/api/ai/**").authenticated()
+                        // Notification endpoints — authenticated users (both roles)
+                        .requestMatchers("/api/notifications/**").authenticated()
                         // Require ADMIN role for admin-specific endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Require STUDENT role for student-specific endpoints

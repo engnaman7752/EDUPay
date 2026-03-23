@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/edupay_db
+    username: postgres
+    password: 7752
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # ===== Spring AI Configuration =====
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: ${GOOGLE_CLOUD_PROJECT_ID:your-gcp-project-id}
+          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
+          chat:
+            options:
+              model: gemini-2.0-flash
+              temperature: 0.7
+
+    vectorstore:
+      pgvector:
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 768
+        initialize-schema: true
+
+# ===== JWT Configuration =====
+jwt:
+  secret: yourSuperSecretKeyThatIsAtLeast256BitsLongAndRandomlyGeneratedForEduPayApp
+  expiration: 3600000
+
+# ===== Logging =====
+logging:
+  level:
+    org.springframework.web: INFO
+    com.EduPay: DEBUG
+    org.springframework.ai: DEBUG
+
+# ===== EduPay Custom Config =====
+edupay:
+  ai:
+    system-prompt: |
+      You are EduPay AI Assistant, a helpful and polite school fee management assistant.
+      You help parents and students understand school policies, fee structures, and payment options.
+      Always be professional, empathetic, and concise.
+      If you reference school policy, cite the source document and page.
+      Only discuss information related to the logged-in user's student data.
+      If you don't know something, say so honestly rather than making up information.
+  notification:
+    cron: "0 0 9 * * MON-FRI"  # Check for pending fees weekdays at 9 AM
