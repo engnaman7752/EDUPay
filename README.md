@@ -1,258 +1,328 @@
-# EduPay: School Fees & Announcement Management App
+# EduPay AI — Intelligent School Fee Management System
+
+<p align="center">
+  <img src="docs/images/architecture.png" alt="EduPay AI Architecture" width="800"/>
+</p>
+
+<p align="center">
+  <strong>🤖 AI-Powered Chat (RAG) &nbsp;•&nbsp; ⚡ Real-Time WebSocket Notifications &nbsp;•&nbsp; 💳 Smart Fee Management</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.5.4-6DB33F?logo=springboot&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring%20AI-1.0.0-6DB33F?logo=spring&logoColor=white" />
+  <img src="https://img.shields.io/badge/Gemini-2.0%20Flash-4285F4?logo=google&logoColor=white" />
+  <img src="https://img.shields.io/badge/Flutter-3.0+-02569B?logo=flutter&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-pgvector-4169E1?logo=postgresql&logoColor=white" />
+</p>
+
+---
 
 ## 📚 Overview
 
-EduPay is a comprehensive mobile application designed to streamline student fee management, announcements, and online payments for schools. It features a multi-role architecture with secure authentication, allowing administrators to manage students and payments while students can view their fees and payment history.
+EduPay AI transforms traditional school fee management into an **intelligent, real-time assistant**. Parents chat with an AI that understands school policies (via RAG), receive personalized fee reminders drafted by GenAI, and get instant notifications pushed through WebSockets — all secured with JWT authentication.
 
-Built with Flutter and Spring Boot as a full-stack project showcasing multi-tenant application architecture with role-based access control.
+### ✨ What Makes This Special
 
-## ✨ Features
+| Feature | How It Works |
+|---------|-------------|
+| **🤖 AI Chat (RAG)** | Parents ask questions → pgvector similarity search finds relevant school policy → Gemini generates a grounded answer with source citations |
+| **⚡ Real-Time Notifications** | System detects pending fees → AI drafts a polite, personalized reminder → Pushed instantly via STOMP WebSocket |
+| **🔒 Scoped AI Context** | JWT ensures the AI only sees and discusses data belonging to the logged-in parent's child |
+| **💎 Premium Flutter UI** | Dark glassmorphism theme, animated chat bubbles, typing indicators, gradient cards |
 
-- **Multi-Admin Support**: Administrators can manage their own students and fee records
-- **JWT Authentication**: Secure role-based access control for Admins and Students
-- **Student Management**: Create, update, and delete student records with fee information
-- **Fee Tracking**: Manage student fee statuses (paid/unpaid, partially paid) and record cash/online payments
-- **Announcements**: Admins can post announcements; both admins and students can view them
-- **Online Payments**: Razorpay integration ready for secure online fee payments
-- **Payment History & Receipts**: View payment history and auto-generated receipts for all transactions
-- **Local Storage**: JWT tokens stored securely using shared_preferences
-- **Cloud Deployment Ready**: Designed for Railway.app or Render.com with PostgreSQL
+---
+
+## 🏗️ System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    FLUTTER MOBILE APP                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐  │
+│  │  AI Chat      │  │  Smart       │  │  Real-Time         │  │
+│  │  Screen       │  │  Dashboard   │  │  Notifications     │  │
+│  │  (Markdown +  │  │  (Fee Card + │  │  (AnimatedList +   │  │
+│  │  Source Tags) │  │  AI Insight) │  │  WebSocket Stream) │  │
+│  └──────┬───────┘  └──────┬───────┘  └────────┬───────────┘  │
+└─────────┼─────────────────┼───────────────────┼──────────────┘
+          │ REST + JWT      │                   │ STOMP/WebSocket
+          ▼                 ▼                   ▼
+┌──────────────────────────────────────────────────────────────┐
+│                  SPRING BOOT 3 BACKEND                        │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐  │
+│  │  AIService    │  │  Notification│  │  Fee/Payment       │  │
+│  │  (RAG Logic)  │  │  Service     │  │  Management        │  │
+│  │  Similarity   │  │  AI-Drafted  │  │  CRUD + Razorpay   │  │
+│  │  Search +     │  │  Reminders + │  │                    │  │
+│  │  Gemini Call  │  │  WS Push     │  │                    │  │
+│  └──────┬───────┘  └──────┬───────┘  └────────┬───────────┘  │
+└─────────┼─────────────────┼───────────────────┼──────────────┘
+          │ Spring AI       │                   │ JPA
+          ▼                 ▼                   ▼
+┌─────────────────┐  ┌─────────────┐  ┌─────────────────────┐
+│  Google Gemini   │  │  STOMP      │  │  PostgreSQL         │
+│  2.0 Flash       │  │  Broker     │  │  + pgvector         │
+│  (LLM)           │  │  /topic     │  │  (Vector Store)     │
+└─────────────────┘  │  /queue     │  └─────────────────────┘
+                     └─────────────┘
+
+         RAG PIPELINE (On Startup)
+  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+  │  School   │───▶│  Tika    │───▶│  Token   │───▶│ pgvector │
+  │  Handbook │    │  Reader  │    │ Splitter │    │Embeddings│
+  │  (PDF)    │    │          │    │          │    │          │
+  └──────────┘    └──────────┘    └──────────┘    └──────────┘
+```
+
+---
 
 ## 🚀 Tech Stack
 
-### Frontend (Flutter)
-- **Framework**: Flutter (Dart 3.0+)
-- **HTTP Client**: `http` package for API communication
-- **Local Storage**: `shared_preferences` for token management
-- **Date Handling**: `intl` for date formatting
-- **UI Design**: Material 3 design system
+### Backend
+| Technology | Purpose |
+|-----------|---------|
+| **Spring Boot 3.5.4** | Core framework (Java 24) |
+| **Spring AI 1.0.0** | LLM orchestration + vector store integration |
+| **Google Gemini 2.0 Flash** | Large Language Model for AI responses |
+| **PostgreSQL + pgvector** | Database + vector similarity search for RAG |
+| **STOMP WebSocket** | Real-time bidirectional notification push |
+| **Spring Security + JWT** | Authentication & role-based authorization |
+| **Apache Tika** | PDF document parsing for RAG ingestion |
+| **Lombok** | Boilerplate reduction |
 
-### Backend (Spring Boot)
-- **Framework**: Spring Boot 3.5.4 (Java 24)
-- **Database**: PostgreSQL with Spring Data JPA
-- **Security**: Spring Security with JWT authentication
-- **Build Tool**: Maven
-- **Utilities**: Lombok for boilerplate reduction
+### Frontend
+| Technology | Purpose |
+|-----------|---------|
+| **Flutter (Dart 3.0+)** | Cross-platform mobile framework |
+| **Riverpod 2.6** | State management |
+| **stomp_dart_client** | STOMP WebSocket client |
+| **flutter_markdown** | Render AI markdown responses |
+| **animated_text_kit** | Typewriter effects for AI responses |
+| **Google Fonts** | Premium typography (Inter) |
+| **Material 3** | Modern design system |
+
+---
 
 ## 📁 Project Structure
 
 ```
 EDUPay-1/
-├── backend/                    # Spring Boot backend
+├── backend/                              # Spring Boot 3 Backend
 │   ├── src/main/java/com/EduPay/
-│   │   ├── controller/        # REST API endpoints
-│   │   ├── service/           # Business logic
-│   │   ├── repository/        # JPA data access
-│   │   ├── model/             # JPA entities
-│   │   ├── dto/               # Data transfer objects
-│   │   ├── config/            # Security & CORS configuration
-│   │   ├── util/              # Utility classes
-│   │   ├── exception/         # Exception handling
-│   │   └── Application.java   # Spring Boot entry point
-│   ├── src/main/resources/
-│   │   └── application.properties  # Configuration
-│   └── pom.xml               # Maven dependencies
+│   │   ├── config/
+│   │   │   ├── AIConfig.java             # Spring AI ChatClient bean
+│   │   │   ├── WebSocketConfig.java      # STOMP broker + /ws endpoint
+│   │   │   ├── SecurityConfig.java       # JWT + role-based access
+│   │   │   └── WebConfig.java            # CORS configuration
+│   │   ├── controller/
+│   │   │   ├── ChatController.java       # POST /api/ai/chat (RAG)
+│   │   │   ├── NotificationController.java # Notification CRUD + admin trigger
+│   │   │   ├── AdminController.java      # Student & fee management
+│   │   │   └── StudentController.java    # Student-facing endpoints
+│   │   ├── service/
+│   │   │   ├── AIService.java            # RAG: vector search + Gemini + scoped context
+│   │   │   ├── VectorIngestionService.java # PDF → chunks → pgvector embeddings
+│   │   │   ├── NotificationService.java  # Scheduled AI reminders + WebSocket push
+│   │   │   └── ...                       # Fee, Payment, Auth services
+│   │   ├── model/
+│   │   │   ├── Notification.java         # Notification entity
+│   │   │   ├── Student.java, Fee.java    # Core JPA entities
+│   │   │   └── User.java, Payment.java
+│   │   └── repository/
+│   │       ├── NotificationRepository.java
+│   │       └── ...                       # JPA repositories
+│   └── src/main/resources/
+│       ├── application.yml               # Gemini API, pgvector, WebSocket config
+│       └── data/school-handbook.pdf      # RAG knowledge source
 │
-└── frontend/edupay/           # Flutter frontend
-    ├── lib/
-    │   ├── main.dart         # App entry point
-    │   ├── constants/        # API & app constants
-    │   ├── models/           # Data models/DTOs
-    │   ├── services/         # API client services
-    │   ├── screens/
-    │   │   ├── auth/         # Login & authentication screens
-    │   │   ├── admin/        # Admin dashboard & management screens
-    │   │   ├── student/      # Student fee & payment screens
-    │   │   └── common/       # Shared screens (announcements, etc.)
-    │   └── utils/            # Helper functions & token management
-    ├── android/              # Android native configuration
-    ├── ios/                  # iOS native configuration
-    ├── web/                  # Web version configuration
-    ├── pubspec.yaml          # Flutter dependencies
-    └── analysis_options.yaml # Dart linting rules
+├── frontend/edupay/                      # Flutter Frontend
+│   └── lib/
+│       ├── core/
+│       │   └── constants/
+│       │       └── app_theme.dart        # Premium dark theme + glassmorphism
+│       ├── features/
+│       │   ├── ai_chat/
+│       │   │   ├── views/
+│       │   │   │   └── chat_screen.dart  # Full AI chat with quick questions
+│       │   │   └── widgets/
+│       │   │       ├── message_bubble.dart # Animated bubbles + source tags
+│       │   │       └── typing_indicator.dart # Three-dot bounce animation
+│       │   └── dashboard/
+│       │       └── widgets/
+│       │           ├── fee_status_card.dart # Gradient card + progress bar
+│       │           └── realtime_alert_list.dart # WebSocket notification stream
+│       ├── models/
+│       │   ├── ai_chat_response.dart     # AI response model
+│       │   └── notification_message.dart # WebSocket message model
+│       ├── services/
+│       │   ├── ai_chat_service.dart      # REST client for AI chat
+│       │   └── notification_service.dart # STOMP client + notification API
+│       ├── screens/
+│       │   ├── student/
+│       │   │   └── student_dashboard.dart # AI FAB + notification bell
+│       │   ├── admin/                    # Admin dashboard & management
+│       │   └── auth/                     # JWT-based login
+│       └── main.dart                     # App entry with Riverpod + dark theme
+│
+└── docs/images/architecture.png          # Architecture diagram
 ```
+
+---
 
 ## 🛠️ Setup and Installation
 
 ### Prerequisites
-- Java 24+
-- Flutter SDK 3.0+
-- PostgreSQL 12+
-- Maven 3.6+
+- **Java 24+** (JDK)
+- **Flutter SDK 3.0+**
+- **PostgreSQL 12+** with `pgvector` extension
+- **Maven 3.6+**
+- **Google Cloud Project** with Vertex AI API enabled
 
-### 1. Backend Setup
+### 1. Database Setup
 
-1. **Database Setup (PostgreSQL)**:
-   ```bash
-   # Create database
-   createdb edupay_db
-   ```
+```bash
+# Create database
+createdb edupay_db
 
-2. **Configure Database Connection**:
-   - Open `backend/src/main/resources/application.properties`
-   - Update credentials:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/edupay_db
-   spring.datasource.username=postgres
-   spring.datasource.password=your_password
-   ```
+# Enable pgvector extension
+psql edupay_db -c "CREATE EXTENSION IF NOT EXISTS vector;"
+```
 
-3. **Set JWT Secret Key**:
-   - Add a strong random key in `application.properties`:
-   ```properties
-   jwt.secret=your_secure_256bit_random_key_here
-   ```
+### 2. Backend Setup
 
-4. **Build and Run**:
-   ```bash
-   cd backend
-   mvn clean install
-   mvn spring-boot:run
-   ```
-   - Backend runs on: `http://localhost:8080`
+```bash
+cd backend
 
-### 2. Frontend Setup
+# Configure in src/main/resources/application.yml:
+# - spring.datasource.password: your PostgreSQL password
+# - spring.ai.vertex.ai.gemini.project-id: your GCP project ID
+# - jwt.secret: a strong random key (256+ bits)
 
-1. **Install Dependencies**:
-   ```bash
-   cd frontend/edupay
-   flutter pub get
-   ```
+# Build and run
+./mvnw clean compile
+./mvnw spring-boot:run
+```
+Backend runs on: `http://localhost:8080`
 
-2. **Configure API Base URL**:
-   - Open `lib/constants/api_constants.dart`
-   - Update `BASE_URL` based on your environment:
-   
-   **Android Emulator**:
-   ```dart
-   static const String BASE_URL = 'http://10.0.2.2:8080/api';
-   ```
-   
-   **iOS Simulator/Localhost**:
-   ```dart
-   static const String BASE_URL = 'http://localhost:8080/api';
-   ```
-   
-   **Physical Device** (replace with your machine IP):
-   ```dart
-   static const String BASE_URL = 'http://YOUR_MACHINE_IP:8080/api';
-   ```
-   
-   **Deployed Backend**:
-   ```dart
-   static const String BASE_URL = 'https://your-backend-domain.com/api';
-   ```
+### 3. Frontend Setup
 
-3. **Run the App**:
-   ```bash
-   flutter run
-   ```
+```bash
+cd frontend/edupay
 
-## 🚀 Running the Application
-🏗️ Project Structure
-The project follows a modular, layered architecture for both the frontend and backend.
+# Install dependencies
+flutter pub get
 
-Backend (com.edupay/)
-com.edupay/
-├── controller/       # REST APIs
-├── service/          # Business logic
-├── repository/       # JPA DB access
-├── entity/           # DB tables (User, Student, Fee, etc.)
-├── dto/              # Login & response formats
-├── config/           # Security (JWT, CORS)
-├── util/             # Helpers (JWT, date)
-└── exception/        # Error handling
+# Configure API base URL in lib/constants/api_constants.dart
 
-1. **Start Backend**: 
-   - Ensure PostgreSQL is running
-   - Navigate to backend folder and run `mvn spring-boot:run`
-   - Verify it's running on `http://localhost:8080`
+# Run the app
+flutter run
+```
 
-2. **Start Frontend**:
-   - Open Flutter project
-   - Connect a device or start an emulator
-   - Run `flutter run`
+---
 
-3. **Login Credentials**:
-   - **Admin**: Credentials set during admin registration
-   - **Student**: Credentials assigned by admin
+## 🔐 Authentication & Security
 
-## 🔐 Authentication Flow
+- **JWT Authentication**: Stateless token-based auth for all API requests
+- **Role-Based Access**: `ADMIN` and `STUDENT` roles with endpoint-level enforcement
+- **Scoped AI Context**: AI only accesses fee data belonging to the logged-in user's student
+- **WebSocket Auth**: JWT token passed in STOMP connect headers
 
-- Users login with email and password
-- Backend returns JWT token (stored in `shared_preferences`)
-- Token is used for authenticated API requests
-- Separate access paths for Admin and Student roles
+---
 
 ## 📱 Key API Endpoints
-Ensure PostgreSQL is installed and running.
 
-Create a database named edupay_db.
+### AI Chat
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/ai/chat` | Send question, get RAG-powered AI response with sources |
 
-Update src/main/resources/application.properties with your credentials:
+### Notifications
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/notifications` | Fetch user's notifications |
+| `GET` | `/api/notifications/unread` | Get unread count |
+| `PUT` | `/api/notifications/{id}/read` | Mark as read |
+| `POST` | `/api/admin/notifications/trigger` | Admin: trigger AI fee reminders |
 
 ### Authentication
-- `POST /api/auth/register/admin` - Register new admin
-- `POST /api/auth/login` - Login (returns JWT token)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register/admin` | Register admin |
+| `POST` | `/api/auth/login` | Login (returns JWT) |
 
-### Student Management (Admin)
-- `GET /api/students` - List all students
-- `POST /api/students` - Add new student
-- `PUT /api/students/{id}` - Update student
-- `DELETE /api/students/{id}` - Delete student
+### Student & Fee Management
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/students` | List students |
+| `POST` | `/api/students` | Add student |
+| `GET` | `/api/fees/{studentId}` | Get student fees |
+| `POST` | `/api/fees/{id}/payment` | Record payment |
 
-### Fee Management
-- `GET /api/fees/{studentId}` - Get student fees
-- `PUT /api/fees/{id}/status` - Update fee status
-- `POST /api/fees/{id}/payment` - Record payment
+### WebSocket
+| Protocol | Endpoint | Description |
+|----------|----------|-------------|
+| `STOMP` | `/ws` | WebSocket handshake (SockJS) |
+| Subscribe | `/topic/notifications/{userId}` | Real-time notification stream |
 
-### Announcements
-- `GET /api/announcements` - List announcements
-- `POST /api/announcements` - Create announcement (Admin)
+---
 
-## 📦 Dependencies
+## 🧠 How the RAG Engine Works
 
-### Backend
-- Spring Boot Web, Data JPA, Security
-- PostgreSQL JDBC Driver
-- Lombok
-- JWT (io.jsonwebtoken)
+```
+1. INGESTION (On Startup)
+   school-handbook.pdf → Tika Reader → Token Splitter → Embeddings → pgvector
 
-### Frontend
-- http (API calls)
-- shared_preferences (local storage)
-- intl (date formatting)
-- cupertino_icons (icons)
+2. QUERY (On User Question)
+   "What is the late fee policy?"
+         │
+         ▼
+   pgvector Similarity Search → Top 5 relevant chunks
+         │
+         ▼
+   Build Augmented Prompt:
+   ┌─────────────────────────────────────┐
+   │ System: "You are EduPay AI..."      │
+   │ Context: [Retrieved policy chunks]  │
+   │ Student Data: [Scoped fee records]  │
+   │ Question: "What is late fee policy?"│
+   └─────────────────────────────────────┘
+         │
+         ▼
+   Gemini 2.0 Flash → Grounded Answer + Source Citations
+```
+
+---
+
+## 🎨 UI Features
+
+- **AI Chat FAB**: Floating action button with gradient animation opens full-screen AI chat
+- **Streaming Chat**: Messages with slide + fade entrance animations
+- **Source Citations**: "📖 School Handbook, Page 12" tags below AI responses
+- **Typing Indicator**: Three-dot bounce animation while AI generates
+- **Notification Bell**: Badge count + pulse animation on new WebSocket messages
+- **Fee Status Card**: Gradient card with progress bar and AI-generated insights
+- **Real-Time Alert List**: AnimatedList with WebSocket stream subscription
+- **Dark Glassmorphism Theme**: Premium dark UI with gradient accents
+
+---
 
 ## 🌐 Deployment
-Run mvn clean install to build.
 
-Run the Spring Boot application: mvn spring-boot:run or from your IDE.
+### Backend (Railway / Render)
+1. Push code to GitHub
+2. Connect repo to Railway/Render
+3. Set environment variables:
+   - `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
+   - `GOOGLE_CLOUD_PROJECT_ID`, `GOOGLE_CLOUD_LOCATION`
+   - `JWT_SECRET`
 
-### Backend Deployment (Railway.app / Render.com)
-- Push code to GitHub
-- Connect repository to Railway/Render
-- Set environment variables:
-  - Database URL
-  - JWT Secret
-  - Port (usually 8080)
+### Frontend (App Stores)
+```bash
+flutter build apk      # Android
+flutter build ios       # iOS
+```
 
-### Frontend Deployment (App Stores)
-- Build APK for Android: `flutter build apk`
-- Build IPA for iOS: `flutter build ios`
-- Upload to respective app stores
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
 
 ## 👨‍💻 Author
 
@@ -260,41 +330,14 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Email: [nj260106@gmail.com](mailto:nj260106@gmail.com)
 - GitHub: [@engnaman7752](https://github.com/engnaman7752)
 
-Developed as a comprehensive school management solution.
+---
 
-## 📞 Support
+## 📄 License
 
-For issues and questions, please:
-- Create an issue in the repository
-- Email: nj260106@gmail.com
-- Contact via GitHub: [@engnaman7752](https://github.com/engnaman7752)
+This project is licensed under the MIT License.
 
 ---
 
-**Note**: This is a development version. For production use, ensure all security measures are properly configured, including strong JWT secrets, CORS policies, and database encryption.
-
-The project uses conditional logic to determine the BASE_URL based on the platform. However, for physical Android devices, you must manually set your host machine's IP address.
-
-Example for physical device: return 'http://192.168.1.5:8080/api';
-
-Run the App:
-
-flutter run
-
-🧪 Testing with Postman
-A Postman collection is recommended for testing all API endpoints. The general flow is:
-
-Register Admin: POST /api/auth/register/admin
-
-Login Admin: POST /api/auth/login (get JWT token)
-
-Add Student (as Admin): POST /api/admin/students (use admin JWT)
-
-Login Student: POST /api/auth/login (use student name/mobile, get JWT token)
-
-Access Student Data (as Student): GET /api/student/fees (use student JWT)
-
-Record Cash Payment (as Admin): POST /api/admin/fees/cash-deposit (use admin JWT)
-
-🤝 Contribution
-Contributions are welcome! If you find a bug or have a suggestion, please open an issue or submit a pull request.
+<p align="center">
+  <strong>Built with ❤️ using Spring AI, Gemini, pgvector & Flutter</strong>
+</p>
