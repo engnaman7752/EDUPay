@@ -334,5 +334,5 @@ This project is licensed under the MIT License.
 ---
 
 <p align="center">
-  <strong>Built with ❤️ using Spring AI, Gemini, pgvector & Flutter</strong>
+  <strong>Built with ❤️using Spring AI, Gemini, pgvector & Flutter</strong>
 </p>
