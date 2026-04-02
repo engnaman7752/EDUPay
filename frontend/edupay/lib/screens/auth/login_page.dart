@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:edupay_app/services/auth_service.dart';
-import 'package:edupay_app/screens/admin/admin_dashboard.dart';
 import 'package:edupay_app/utils/token_manager.dart';
-
-import '../student/student_dashboard.dart'; // Import TokenManager
 import 'package:edupay_app/constants/api_constants.dart';
+import 'package:edupay_app/domain/models/edupay_user.dart';
+import 'package:edupay_app/presentation/screens/hub_shell.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,16 +27,13 @@ class _LoginPageState extends State<LoginPage> {
     _checkLoginStatus(); // Check if user is already logged in
   }
 
-  // Checks if a token exists and navigates to the appropriate dashboard
+  // Checks if a token exists and navigates to the hub
   Future<void> _checkLoginStatus() async {
     final token = await TokenManager.getToken();
     final role = await TokenManager.getRole();
+    final username = await TokenManager.getUsername();
     if (token != null && role != null) {
-      if (role == 'ADMIN') {
-        _navigateToAdminDashboard();
-      } else if (role == 'STUDENT') {
-        _navigateToStudentDashboard();
-      }
+      _navigateToHub(token, role, username ?? '');
     }
   }
 
@@ -46,40 +42,30 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
       _errorMessage = null;
     });
-
-    final String username = _usernameController.text;
-    final String password = _passwordController.text;
-
     try {
-      final authResponse = await _authService.login(username, password);
-
-      if (authResponse.role == 'ADMIN') {
-        _navigateToAdminDashboard();
-      } else if (authResponse.role == 'STUDENT') {
-        _navigateToStudentDashboard();
-      }
+      final authResponse = await _authService.login(
+          _usernameController.text, _passwordController.text);
+      _navigateToHub(
+          authResponse.jwtToken, authResponse.role, authResponse.username);
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceFirst('Exception: ', '');
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
-  void _navigateToAdminDashboard() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const AdminDashboard()),
+  void _navigateToHub(String token, String roleStr, String username) {
+    final role = EduPayRole.values.firstWhere(
+      (r) => r.name == roleStr.toUpperCase(),
+      orElse: () => EduPayRole.STUDENT,
     );
-  }
-
-  void _navigateToStudentDashboard() {
+    final user = EduPayUser(
+        id: '', username: username, token: token, role: role);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const StudentDashboard()),
+      MaterialPageRoute(builder: (_) => HubShell(user: user)),
     );
   }
 
