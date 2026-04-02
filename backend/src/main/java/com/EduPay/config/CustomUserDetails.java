@@ -76,7 +76,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        // Implement logic for account enablement if needed. For now, always true.
-        return true;
+        return "ACTIVE".equalsIgnoreCase(user.getStatus());
     }
 }

@@ -19,5 +19,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     List<Announcement> findByTargetAudience(String targetAudience);
 
+    List<Announcement> findByTargetAudienceInOrderByPublishDateDesc(List<String> targetAudiences);
+
     List<Announcement> findByPublishDateAfter(LocalDateTime date);
 }

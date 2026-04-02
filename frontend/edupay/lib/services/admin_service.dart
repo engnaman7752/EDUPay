@@ -9,7 +9,7 @@ import 'package:edupay_app/models/cash_deposit_request.dart';
 import 'package:edupay_app/utils/token_manager.dart';
 
 class AdminService {
-  final String _baseUrl = ApiConstants.BASE_URL;
+  String get _baseUrl => ApiConstants.BASE_URL;
 
   AdminService();
 
@@ -31,10 +31,12 @@ class AdminService {
     try {
       final dynamic decodedBody = jsonDecode(response.body);
       if (decodedBody is Map<String, dynamic> && decodedBody.containsKey('message')) {
-        return decodedBody['message'] as String;
+        final msg = decodedBody['message'];
+        if (msg is List) return msg.join(', ');
+        return msg.toString();
       } else if (decodedBody is String && decodedBody.isNotEmpty) {
         return decodedBody;
-      } else if (decodedBody is List && decodedBody.isNotEmpty && decodedBody[0] is String) {
+      } else if (decodedBody is List && decodedBody.isNotEmpty) {
         return decodedBody.join(', ');
       }
     } catch (e) {
@@ -128,6 +130,43 @@ class AdminService {
     } catch (e) {
       print('DEBUG: AdminService: deleteStudent exception: $e');
       throw Exception('Failed to delete student: $e');
+    }
+  }
+
+  Future<void> payAllFees(int studentId) async {
+    final token = await TokenManager.getToken();
+    if (token == null) throw Exception('No token found');
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/admin/students/$studentId/fees/pay-all'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(_parseErrorMessage(response));
+    }
+  }
+
+  Future<String> generateAiNotice(int studentId, String prompt) async {
+    final token = await TokenManager.getToken();
+    if (token == null) throw Exception('No token found');
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/admin/students/$studentId/ai-notice'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'prompt': prompt}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['notice'];
+    } else {
+      throw Exception(_parseErrorMessage(response));
     }
   }
 

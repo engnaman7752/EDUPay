@@ -6,6 +6,7 @@ import 'package:edupay_app/screens/admin/admin_dashboard.dart';
 import 'package:edupay_app/utils/token_manager.dart';
 
 import '../student/student_dashboard.dart'; // Import TokenManager
+import 'package:edupay_app/constants/api_constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -88,6 +89,53 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text('EduPay Login'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_ethernet),
+            tooltip: 'Set Server IP Address',
+            onPressed: () {
+              final TextEditingController ipController = TextEditingController(text: ApiConstants.customIp ?? '');
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Server IP Settings'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Enter the IP address of your PC (e.g., 192.168.1.5).'),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: ipController,
+                          decoration: const InputDecoration(
+                            hintText: 'IP Address',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ApiConstants.customIp = ipController.text.trim();
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Server IP updated to: ${ApiConstants.customIp}')),
+                          );
+                        },
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(

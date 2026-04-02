@@ -35,6 +35,9 @@ public class User {
     private String role; // User's role: "ADMIN" or "STUDENT"
 
 
+    @Column(nullable = false)
+    private String status = "ACTIVE"; // User's status: ACTIVE, INACTIVE
+
     @OneToMany(mappedBy = "admin")
     private List<Student> managedStudents = new ArrayList<>(); // Students managed by this admin
 

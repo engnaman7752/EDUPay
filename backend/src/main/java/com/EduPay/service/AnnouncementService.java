@@ -3,13 +3,21 @@ package com.EduPay.service;
 import com.EduPay.dto.AnnouncementDto;
 import com.EduPay.model.Announcement;
 import com.EduPay.model.User;
+import com.EduPay.config.CustomUserDetails;
+import com.EduPay.model.Student;
 import com.EduPay.repository.AnnouncementRepository;
+import com.EduPay.repository.StudentRepository;
 import com.EduPay.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -21,10 +29,12 @@ public class AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
     private final UserRepository userRepository; // To link announcements to their creators
+    private final StudentRepository studentRepository;
 
-    public AnnouncementService(AnnouncementRepository announcementRepository, UserRepository userRepository) {
+    public AnnouncementService(AnnouncementRepository announcementRepository, UserRepository userRepository, StudentRepository studentRepository) {
         this.announcementRepository = announcementRepository;
         this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
     }
 
     /**
@@ -110,9 +120,34 @@ public class AnnouncementService {
      * @return List of AnnouncementDto.
      */
     public List<AnnouncementDto> getAnnouncementsForStudents() {
-        // This method can be expanded to filter by student's class/standard.
-        // For now, it fetches all announcements.
-        List<Announcement> announcements = announcementRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated.");
+        }
+
+        Long currentUserId = null;
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getId();
+        } else {
+            return announcementRepository.findByTargetAudience("All Students").stream()
+                    .map(this::convertToDto).collect(Collectors.toList());
+        }
+
+        User studentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Student user not found"));
+
+        Optional<Student> studentOpt = studentRepository.findByName(studentUser.getUsername());
+
+        List<String> targetAudiences = new ArrayList<>(Arrays.asList("All Students", "ALL_STUDENTS"));
+        
+        if (studentOpt.isPresent()) {
+            Student student = studentOpt.get();
+            targetAudiences.add("CLASS:" + student.getStandard());
+            targetAudiences.add("STUDENT:" + student.getId());
+        }
+
+        List<Announcement> announcements = announcementRepository.findByTargetAudienceInOrderByPublishDateDesc(targetAudiences);
+        
         return announcements.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

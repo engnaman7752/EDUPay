@@ -1,0 +1,20 @@
+# ============================================================
+# ENVIRONMENT VARIABLE TEMPLATE — SAFE TO COMMIT
+# ============================================================
+# Copy this file to application-local.yml and fill in real values.
+# DO NOT put real keys in this file.
+
+spring:
+  datasource:
+    password: "YOUR_POSTGRES_PASSWORD"
+
+  ai:
+    openai:
+      api-key: "YOUR_GEMINI_KEY_1"
+
+jwt:
+  secret: "YOUR_STRONG_256BIT_RANDOM_SECRET"
+
+edupay:
+  ai:
+    api-keys: "KEY_1,KEY_2,KEY_3,KEY_4"

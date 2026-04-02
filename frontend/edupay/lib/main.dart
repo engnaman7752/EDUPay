@@ -23,7 +23,7 @@ class EduPayApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'EduPay AI',
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
       home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );

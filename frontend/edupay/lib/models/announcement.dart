@@ -27,7 +27,15 @@ class Announcement {
       id: json['id'] as int?,
       title: json['title'] as String,
       content: json['content'] as String,
-      publishDate: DateTime.parse(json['publishDate'] as String),
+      publishDate: json['publishDate'] is List
+          ? DateTime(
+              json['publishDate'][0],
+              json['publishDate'][1],
+              json['publishDate'][2],
+              json['publishDate'].length > 3 ? json['publishDate'][3] : 0,
+              json['publishDate'].length > 4 ? json['publishDate'][4] : 0,
+              json['publishDate'].length > 5 ? json['publishDate'][5] : 0)
+          : DateTime.parse(json['publishDate'].toString()),
       targetAudience: json['targetAudience'] as String?,
       creatorId: json['creatorId'] as int?,
       creatorUsername: json['creatorUsername'] as String?,

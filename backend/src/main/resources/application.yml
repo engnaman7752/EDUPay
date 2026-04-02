@@ -1,11 +1,14 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
+  profiles:
+    active: local   # loads application-local.yml — override in production via SPRING_PROFILES_ACTIVE=prod
+
   datasource:
     url: jdbc:postgresql://localhost:5432/edupay_db
     username: postgres
-    password: 7752
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,16 +22,19 @@ spring:
   # ===== Spring AI Configuration =====
   ai:
     openai:
-      api-key: ${GEMINI_API_KEY:AIzaSyDrjk55pgPDh8RFbuW1AO2k-yorBJNfUJw}
+      api-key: ${GEMINI_PRIMARY_KEY}
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:
           model: gemini-2.0-flash
           temperature: 0.7
+    retry:
+      max-attempts: 1
+      on-client-errors: false
 
 # ===== JWT Configuration =====
 jwt:
-  secret: yourSuperSecretKeyThatIsAtLeast256BitsLongAndRandomlyGeneratedForEduPayApp
+  secret: ${JWT_SECRET}
   expiration: 3600000
 
 # ===== Logging =====
@@ -36,11 +42,15 @@ logging:
   level:
     org.springframework.web: INFO
     com.EduPay: DEBUG
-    org.springframework.ai: DEBUG
+    org.springframework.ai: WARN
+    org.springframework.retry: WARN
 
 # ===== EduPay Custom Config =====
 edupay:
   ai:
+    # Comma-separated Gemini API keys — rotated round-robin per request
+    # Set real values in application-local.yml (gitignored)
+    api-keys: ${GEMINI_API_KEYS}
     system-prompt: |
       You are EduPay AI Assistant, a helpful and polite school fee management assistant.
       You help parents and students understand school policies, fee structures, and payment options.

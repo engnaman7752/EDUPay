@@ -70,9 +70,20 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         // Allow WebSocket handshake
                         .requestMatchers("/ws/**").permitAll()
-                        // AI chat endpoints — authenticated users (both roles)
+                        
+                        // User Management (Admin only)
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        
+                        // Dashboard (Admin, Analyst, Viewer)
+                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "ANALYST", "VIEWER")
+                        
+                        // Financial Records
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/financial-records/**").hasAnyRole("ADMIN", "ANALYST", "VIEWER")
+                        .requestMatchers("/api/financial-records/**").hasRole("ADMIN")
+                        
+                        // AI chat endpoints — authenticated users
                         .requestMatchers("/api/ai/**").authenticated()
-                        // Notification endpoints — authenticated users (both roles)
+                        // Notification endpoints — authenticated users
                         .requestMatchers("/api/notifications/**").authenticated()
                         // Require ADMIN role for admin-specific endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

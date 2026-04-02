@@ -147,6 +147,15 @@ public class AdminService {
 
 
     @Transactional
+    public List<FeeDto> getFeesForStudent(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
+        return feeRepository.findByStudent(student).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public FeeDto addFee(FeeDto feeDto) {
         Student student = studentRepository.findById(feeDto.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + feeDto.getStudentId()));
@@ -226,6 +235,19 @@ public class AdminService {
         paymentRepository.save(payment);
 
         return convertToDto(updatedFee);
+    }
+
+    @Transactional
+    public void payAllOutstandingFees(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
+        
+        List<Fee> fees = feeRepository.findByStudent(student);
+        for (Fee fee : fees) {
+            if (fee.getOutstandingAmount() > 0) {
+                recordCashPayment(studentId, fee.getId(), fee.getOutstandingAmount());
+            }
+        }
     }
 
     // --- Helper methods for DTO conversion ---

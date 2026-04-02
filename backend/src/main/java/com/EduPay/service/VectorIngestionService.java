@@ -36,48 +36,10 @@ public class VectorIngestionService {
      * Triggered automatically when the application is fully started.
      * Reads the school handbook PDF and ingests it into the vector store.
      */
-    @EventListener(ApplicationReadyEvent.class)
+    // DISABLED: Auto-ingestion was burning API quota on every startup.
+    // Re-enable this when you actually have a school handbook PDF to upload.
+    // @EventListener(ApplicationReadyEvent.class)
     public void ingestDocuments() {
-        try {
-            Resource pdfResource = new ClassPathResource("data/school-handbook.pdf");
-
-            if (!pdfResource.exists()) {
-                log.warn("⚠️ School handbook PDF not found at classpath:data/school-handbook.pdf. " +
-                        "AI responses will not include policy information. " +
-                        "Place a PDF file there and restart the application.");
-                return;
-            }
-
-            log.info("📚 Starting ingestion of school handbook...");
-
-            // Read the PDF using Apache Tika
-            TikaDocumentReader reader = new TikaDocumentReader(pdfResource);
-            List<Document> rawDocuments = reader.get();
-
-            // Split into smaller chunks for better retrieval accuracy
-            TokenTextSplitter splitter = new TokenTextSplitter(
-                    300,   // default chunk size (tokens)
-                    50,    // min chunk size
-                    10,    // overlap
-                    10000, // max tokens
-                    true   // keep separator
-            );
-            List<Document> chunks = splitter.apply(rawDocuments);
-
-            // Add source metadata to each chunk
-            for (int i = 0; i < chunks.size(); i++) {
-                Document chunk = chunks.get(i);
-                chunk.getMetadata().put("source", "School Handbook");
-                chunk.getMetadata().put("page", String.valueOf(i + 1));
-            }
-
-            // Store embeddings in pgvector
-            vectorStore.add(chunks);
-
-            log.info("✅ Successfully ingested {} document chunks into vector store.", chunks.size());
-
-        } catch (Exception e) {
-            log.error("❌ Failed to ingest school handbook: {}", e.getMessage(), e);
-        }
+        log.info("📚 Document ingestion is DISABLED. No handbook PDF will be processed.");
     }
 }

@@ -34,7 +34,15 @@ class Payment {
       transactionId: json['transactionId'] as String,
       amount: json['amount'] as double,
       paymentMethod: json['paymentMethod'] as String,
-      paymentDate: DateTime.parse(json['paymentDate'] as String),
+      paymentDate: json['paymentDate'] is List
+          ? DateTime(
+              json['paymentDate'][0],
+              json['paymentDate'][1],
+              json['paymentDate'][2],
+              json['paymentDate'].length > 3 ? json['paymentDate'][3] : 0,
+              json['paymentDate'].length > 4 ? json['paymentDate'][4] : 0,
+              json['paymentDate'].length > 5 ? json['paymentDate'][5] : 0)
+          : DateTime.parse(json['paymentDate'].toString()),
       status: json['status'] as String,
       gatewayPaymentId: json['gatewayPaymentId'] as String?,
       gatewayOrderId: json['gatewayOrderId'] as String?,

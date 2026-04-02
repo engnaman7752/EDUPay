@@ -1,62 +1,67 @@
 // lib/core/constants/app_theme.dart
-// Premium dark theme for EduPay AI
+// Premium light theme for EduPay AI
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // ===== Color Palette =====
-  static const Color primaryDark = Color(0xFF0D1B2A);
-  static const Color primaryMid = Color(0xFF1B2838);
-  static const Color surfaceDark = Color(0xFF162032);
-  static const Color cardDark = Color(0xFF1E2D40);
-  static const Color accentBlue = Color(0xFF4FC3F7);
+  // ===== Color Palette (Light Mode) =====
+  static const Color primaryLight = Color(0xFFF8F9FA);
+  static const Color primaryMid = Color(0xFFFFFFFF);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color cardLight = Color(0xFFFFFFFF);
+  
+  // Specific requested colors
+  static const Color electricBlue = Color(0xFF3F51B5); // Payment & WebSocket action layer
+  static const Color softIndigo = Color(0xFFE8EAF6); // AI bubble
+  static const Color mintGreen = Color(0xFFE8F5E9); // Success badges
+
   static const Color accentPurple = Color(0xFF7C4DFF);
-  static const Color accentGreen = Color(0xFF66BB6A);
   static const Color accentOrange = Color(0xFFFFB74D);
   static const Color accentRed = Color(0xFFEF5350);
-  static const Color textPrimary = Color(0xFFF5F5F5);
-  static const Color textSecondary = Color(0xFFB0BEC5);
-  static const Color textHint = Color(0xFF78909C);
-  static const Color dividerColor = Color(0xFF2C3E50);
+  
+  // Legacy aliases to prevent build breakages across the app
+  static const Color accentBlue = electricBlue;
+  static const Color accentGreen = mintGreen;
+  static const Color cardDark = cardLight;
+  static const Color primaryDark = primaryLight;
+  
+  static const Color textPrimary = Color(0xFF212121);
+  static const Color textSecondary = Color(0xFF757575);
+  static const Color textHint = Color(0xFF9E9E9E);
+  static const Color dividerColor = Color(0xFFEEEEEE);
 
   // ===== Gradients =====
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1A237E), Color(0xFF4A148C)],
-  );
-
-  static const LinearGradient cardGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFF1E2D40), Color(0xFF263850)],
+    colors: [electricBlue, accentPurple],
   );
 
   static const LinearGradient accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [accentBlue, accentPurple],
+    colors: [electricBlue, accentPurple],
   );
 
   // ===== Theme Data =====
-  static ThemeData get darkTheme {
+  static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: primaryDark,
-      primaryColor: accentBlue,
-      colorScheme: const ColorScheme.dark(
-        primary: accentBlue,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: primaryLight,
+      primaryColor: electricBlue,
+      colorScheme: const ColorScheme.light(
+        primary: electricBlue,
         secondary: accentPurple,
-        surface: surfaceDark,
+        surface: surfaceLight,
         error: accentRed,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: textPrimary,
       ),
       textTheme: GoogleFonts.interTextTheme(
-        ThemeData.dark().textTheme.copyWith(
+        ThemeData.light().textTheme.copyWith(
               headlineLarge: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
@@ -89,28 +94,28 @@ class AppTheme {
             ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: primaryMid,
+        backgroundColor: electricBlue,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.inter(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: textPrimary,
+          color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: accentBlue),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       cardTheme: CardThemeData(
-        color: cardDark,
-        elevation: 0,
+        color: cardLight,
+        elevation: 2,
+        shadowColor: Colors.black12,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: accentBlue,
+          backgroundColor: electricBlue,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -119,31 +124,34 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: cardDark,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: dividerColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: dividerColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: accentBlue, width: 1.5),
+          borderSide: const BorderSide(color: electricBlue, width: 1.5),
         ),
         hintStyle: const TextStyle(color: textHint),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: accentPurple,
+        backgroundColor: electricBlue,
         foregroundColor: Colors.white,
-        elevation: 8,
+        elevation: 6,
       ),
       dividerTheme: const DividerThemeData(
         color: dividerColor,
         thickness: 1,
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: cardDark,
-        contentTextStyle: const TextStyle(color: textPrimary),
+        backgroundColor: textPrimary,
+        contentTextStyle: const TextStyle(color: Colors.white),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
@@ -152,12 +160,12 @@ class AppTheme {
 
   // ===== Glassmorphism Card Decoration =====
   static BoxDecoration get glassCard => BoxDecoration(
-        color: cardDark.withOpacity(0.7),
+        color: Colors.white.withOpacity(0.9),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -166,7 +174,7 @@ class AppTheme {
 
   // ===== AI Chat Bubble Styles =====
   static BoxDecoration get userBubble => BoxDecoration(
-        gradient: accentGradient,
+        color: electricBlue,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(18),
           topRight: Radius.circular(18),
@@ -175,7 +183,7 @@ class AppTheme {
         ),
         boxShadow: [
           BoxShadow(
-            color: accentBlue.withOpacity(0.3),
+            color: electricBlue.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -183,13 +191,13 @@ class AppTheme {
       );
 
   static BoxDecoration get aiBubble => BoxDecoration(
-        color: cardDark,
+        color: softIndigo,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(18),
           topRight: Radius.circular(18),
           bottomLeft: Radius.circular(4),
           bottomRight: Radius.circular(18),
         ),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: electricBlue.withOpacity(0.1)),
       );
 }

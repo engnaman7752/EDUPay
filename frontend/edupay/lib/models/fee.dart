@@ -29,9 +29,11 @@ class Fee {
       id: json['id'] as int?,
       feeType: json['feeType'] as String,
       amount: json['amount'] as double,
-      amountPaid: json['amountPaid'] as double,
-      outstandingAmount: json['outstandingAmount'] as double,
-      dueDate: DateTime.parse(json['dueDate'] as String),
+      amountPaid: (json['amountPaid'] as num).toDouble(),
+      outstandingAmount: (json['outstandingAmount'] as num).toDouble(),
+      dueDate: json['dueDate'] is List 
+          ? DateTime(json['dueDate'][0], json['dueDate'][1], json['dueDate'][2])
+          : DateTime.parse(json['dueDate'] as String),
       status: json['status'] as String,
       studentId: json['studentId'] as int?,
     );

@@ -8,7 +8,7 @@ import 'package:edupay_app/models/auth_response.dart';
 import 'package:edupay_app/utils/token_manager.dart';
 
 class AuthService {
-  final String _baseUrl = ApiConstants.BASE_URL;
+  String get _baseUrl => ApiConstants.BASE_URL;
 
   // Handles user login (for both admin and student)
   Future<AuthResponse> login(String username, String password) async {

@@ -8,7 +8,7 @@ import 'package:edupay_app/models/payment_callback.dart';
 import 'package:edupay_app/utils/token_manager.dart';
 
 class PaymentService {
-  final String _baseUrl = ApiConstants.BASE_URL;
+  String get _baseUrl => ApiConstants.BASE_URL;
 
   // Helper to get authorization headers
   Future<Map<String, String>> _getAuthHeaders() async {

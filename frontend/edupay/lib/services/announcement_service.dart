@@ -9,7 +9,7 @@ import '../constants/api_constants.dart';
 
 
 class AnnouncementService {
-  final String _baseUrl = ApiConstants.BASE_URL;
+  String get _baseUrl => ApiConstants.BASE_URL;
 
   // Helper to get authorization headers
   Future<Map<String, String>> _getAuthHeaders() async {

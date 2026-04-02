@@ -18,11 +18,13 @@ public class AdminController {
 
     private final AdminService adminService; // Service for student and fee management
     private final AnnouncementService announcementService; // Service for announcement management
+    private final com.EduPay.service.AIService aiService;
 
     // Constructor for dependency injection
-    public AdminController(AdminService adminService, AnnouncementService announcementService) {
+    public AdminController(AdminService adminService, AnnouncementService announcementService, com.EduPay.service.AIService aiService) {
         this.adminService = adminService;
         this.announcementService = announcementService;
+        this.aiService = aiService;
     }
 
     // --- Student Management Endpoints ---
@@ -67,6 +69,12 @@ public class AdminController {
     // --- Fee Management Endpoints ---
 
 
+    @GetMapping("/students/{studentId}/fees")
+    public ResponseEntity<List<FeeDto>> getFeesForStudent(@PathVariable Long studentId) {
+        List<FeeDto> fees = adminService.getFeesForStudent(studentId);
+        return ResponseEntity.ok(fees);
+    }
+
     @PostMapping("/fees")
     public ResponseEntity<FeeDto> addFee(@RequestBody FeeDto feeDto) {
         FeeDto createdFee = adminService.addFee(feeDto);
@@ -95,7 +103,29 @@ public class AdminController {
         }
     }
 
-    // --- Announcement Management Endpoints ---
+    @PostMapping("/students/{studentId}/fees/pay-all")
+    public ResponseEntity<?> payAllFees(@PathVariable Long studentId) {
+        try {
+            adminService.payAllOutstandingFees(studentId);
+            return ResponseEntity.ok("All fees marked as paid successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/students/{studentId}/ai-notice")
+    public ResponseEntity<?> generateAINotice(
+            @PathVariable Long studentId,
+            @RequestBody(required = false) java.util.Map<String, String> requestBody) {
+        try {
+            String adminPrompt = requestBody != null ? requestBody.get("prompt") : "";
+            String aiGeneratedNotice = aiService.generateAdminNotice(studentId, adminPrompt);
+            return ResponseEntity.ok(java.util.Collections.singletonMap("notice", aiGeneratedNotice));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
 
     @PostMapping("/announcements")

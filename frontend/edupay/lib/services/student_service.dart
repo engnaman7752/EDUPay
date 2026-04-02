@@ -9,7 +9,7 @@ import 'package:edupay_app/models/payment_history.dart';
 import 'package:edupay_app/utils/token_manager.dart';
 
 class StudentService {
-  final String _baseUrl = ApiConstants.BASE_URL;
+  String get _baseUrl => ApiConstants.BASE_URL;
 
   // Helper to get authorization headers
   Future<Map<String, String>> _getAuthHeaders() async {
