@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull; // Import this
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 // ... other imports ...
@@ -19,5 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      @Override // No need to override findById explicitly unless you add custom logic
     @NonNull Optional<User> findById(@NonNull Long aLong); // If you keep it, add @NonNull
 
-    boolean existsByUsername(@NonNull String username); // Add @NonNull
+    boolean existsByUsername(@NonNull String username);
+
+    List<User> findByRole(String role);
 }

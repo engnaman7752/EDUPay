@@ -10,6 +10,7 @@ import 'package:edupay_app/domain/models/edupay_user.dart';
 import 'package:edupay_app/presentation/widgets/hub_sidebar.dart';
 import 'package:edupay_app/presentation/widgets/glowing_orb_fab.dart';
 import 'package:edupay_app/presentation/screens/admin/admin_hub_view.dart';
+import 'package:edupay_app/presentation/screens/admin/broadcast_screen.dart';
 import 'package:edupay_app/presentation/screens/student/student_hub_view.dart';
 
 class HubShell extends ConsumerStatefulWidget {
@@ -108,9 +109,8 @@ class _HubShellState extends ConsumerState<HubShell> {
       case 3: // Reports
         return _PlaceholderView(
             icon: Icons.bar_chart_rounded, label: 'Reports');
-      case 4: // Notices
-        return _PlaceholderView(
-            icon: Icons.campaign_rounded, label: 'Notices');
+      case 4: // Notices / Broadcast
+        return const BroadcastScreen();
       case 5: // AI Chat
         return _PlaceholderView(
             icon: Icons.smart_toy_rounded,

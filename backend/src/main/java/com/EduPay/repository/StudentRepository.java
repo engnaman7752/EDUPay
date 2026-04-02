@@ -28,4 +28,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByAdminId(Long adminId);
 
     Optional<Student> findByName(String username);
+
+    List<Student> findByStandard(String standard);
 }

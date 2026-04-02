@@ -85,6 +85,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/ai/**").authenticated()
                         // Notification endpoints — authenticated users
                         .requestMatchers("/api/notifications/**").authenticated()
+                        // Announcements: broadcast = admin only, /my = any authenticated
+                        .requestMatchers("/api/announcements/broadcast").hasRole("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/announcements/my").authenticated()
+                        .requestMatchers("/api/announcements/**").hasAnyRole("ADMIN", "ANALYST", "VIEWER")
                         // Require ADMIN role for admin-specific endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Require STUDENT role for student-specific endpoints
