@@ -73,7 +73,11 @@ public class SecurityConfig {
                         
                         // User Management (Admin only)
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
-                        
+
+                        // Fee Assignment & Late Charges (Admin only)
+                        .requestMatchers("/api/fees/assign").hasRole("ADMIN")
+                        .requestMatchers("/api/fees/apply-late-charge").hasRole("ADMIN")
+
                         // Dashboard (Admin, Analyst, Viewer)
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "ANALYST", "VIEWER")
                         

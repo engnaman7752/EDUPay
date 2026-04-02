@@ -11,6 +11,7 @@ import 'package:edupay_app/presentation/widgets/hub_sidebar.dart';
 import 'package:edupay_app/presentation/widgets/glowing_orb_fab.dart';
 import 'package:edupay_app/presentation/screens/admin/admin_hub_view.dart';
 import 'package:edupay_app/presentation/screens/admin/broadcast_screen.dart';
+import 'package:edupay_app/presentation/screens/admin/fee_assignment_screen.dart';
 import 'package:edupay_app/presentation/screens/student/student_hub_view.dart';
 
 class HubShell extends ConsumerStatefulWidget {
@@ -104,8 +105,8 @@ class _HubShellState extends ConsumerState<HubShell> {
       case 1: // Students (placeholder)
         return _PlaceholderView(
             icon: Icons.people_alt_rounded, label: 'Students');
-      case 2: // Finances
-        return const AdminHubView();
+      case 2: // Finances / Fee Management
+        return const FeeAssignmentScreen();
       case 3: // Reports
         return _PlaceholderView(
             icon: Icons.bar_chart_rounded, label: 'Reports');
